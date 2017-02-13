@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css?family=Reem+Kufi');
+@import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
+
+/*
+ * UFCG - Ciencia Da Computacao
+ * Criado por Davi Laerte 
+ */
+
+.icone-check {
+	font-size:23px;
+	color: black;
+}
+
+.icone-do-filtro {
+	font-size: 20px;
+}
+
+.linha-tarefa-3 {
+	margin-top: 25px;
+}
+
+.linha-tarefa-2 {
+	margin-top: 5px;
+}
+
+.icone-subtarefa {
+	font-size:15px;
+}
+
+.icone-configuracao {
+	font-size:20px;
+}
+
+.opcoes-linha-2 {
+	margin-top: 5px;
+}
+
+.filtro {
+	margin-top: 25px;
+}
+
+.progress {
+	background-color: antiquewhite;
+	margin-top: 10px;
+	height: 28px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	border-radius: 5px;
+}
+
+.list-group-item.active, .list-group-item.active:hover {
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;	
+}
+
+.lista-tarefa-item.active .tarefa-nome {
+	text-decoration: line-through;
+}
+
+.lista-subtarefa-item.active .subtarefa-nome {
+	color: white;
+	text-decoration: line-through;
+}
+
+.lista-subtarefa-item .subtarefa-nome {
+	color: dimgray;
+}
+
+.tarefa-nome, .subtarefa-nome, .tarefa-categoria {
+	font-size: 16px;
+	font-family: 'Reem Kufi', sans-serif;
+}
+
+.lista-tarefa-item {
+	color: dimgray;
+	padding: 12px 8px 12px 40px;
+	overflow: hidden;
+	background-color: lightyellow;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;
+	border-radius: 5px 15px;
+}
+
+.lista-subtarefa-item {
+	overflow: hidden;
+	background-color: PaleGoldenrod;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px;
+	border-radius: 5px 15px;
+}
+
+.icone-subtarefa:hover, .icone-configuracao:hover, .icone-check:hover {
+	opacity: 0.5;
+	filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+
+.label-opcao-prioridade, .content-opcao-prioridade, .label-nova-categoria,
+ .content-nova-categoria, .label-comentarios, .content-comentarios {
+ 	margin-top:15px;
+
+}
+
+.icone-lista {
+	font-size:30px;
+	margin-top: 68px;
+}
+
+#barraDeProgresso {
+	font-family: 'Bangers', cursive;
+	color: black;
+	border-style: solid;
+	border-color: white;
+	border-width: 1px;
+	border-radius: 5px;
+}

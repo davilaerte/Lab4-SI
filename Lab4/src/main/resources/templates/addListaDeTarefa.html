@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--UFCG - Ciencia Da Computacao-->
+<!--Criado por Davi Laerte-->
+
+<html lang="en">
+	<head>
+	  <title>addListaTarefa</title>
+	  <meta charset="utf-8">
+	</head>
+	<body>
+		<div class="container">
+			<div class="container">
+				<h1 class="texto-principal">Organizador De Tarefas</h1>
+				<div ng-show="alerta.estaAtivo" class="{{alerta.classe}}">
+  					<a class="close" aria-label="close" ng-click="alerta.estaAtivo = false">&times;</a>
+  					<strong>{{alerta.tipoAlerta}}!</strong> {{alerta.texto}}
+				</div>
+				<h4><b><i>Adicione Uma Nova Lista De Tarefa:</i></b></h4>
+				<form name="meuForm" class="input-group" novalidate ng-submit="addListaDeTarefa()">
+					<input name="novaListaDeTarefa" ng-model="novaListaDeTarefa" id="novaListaDeTarefa" type="text" class="form-control" placeholder="Adicione um nome a nova lista" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Nome nao pode ser vazio e nem maior que {{numeroMaximoDeCaracteresEntrada}} caracteres" required>
+					<div class="input-group-btn">
+						<button ng-disabled="!meuForm.novaListaDeTarefa.$valid" id="buttonAddNovaListaDeTarefa" class="btn btn-default" type="submit" title="Adicionar Lista">
+							<i class="glyphicon glyphicon-plus"></i>
+						</button>
+					</div>
+				</form>
+			</div>				
+		</div>
+	</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--UFCG - Ciencia Da Computacao-->
+<!--Criado por Davi Laerte-->
+
+<html lang="en">
+	<head>
+	  <title>Lista De Tarefas</title>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" type="text/css" href="templates/css/listaDeTarefa.css">
+	</head>
+	<body>
+		<div class="container" id="principal">
+			<div class="container">
+				<div class="row">
+					<div class ="col-lg-3 col-md-3 col-sm-3 col-xs-2"><span class="center-block"><i class="icone-lista glyphicon glyphicon-tasks"></i></span></div>
+					<div class ="col-lg-7 col-md-7 col-sm-8 col-xs-10"><h1 id="textoPrincipal" title="Nome Da Lista"><i>{{nomeDaLista}}</i></h1></div>
+					<div class ="col-lg-2 col-md-2 col-sm-1 col-xs-0"></div>
+				</div>
+				<div ng-show="alerta.estaAtivo" class="{{alerta.classe}}">
+  					<a class="close" aria-label="close" ng-click="alerta.estaAtivo = false">&times;</a>
+  					<strong>{{alerta.tipoAlerta}}</strong> {{alerta.texto}}
+				</div>
+				<div class="opcoes-linha-1 container">
+					<div class="row">
+						<div class="col-lg-6"><button type="button" class="btn btn-info btn-block btn-md" data-toggle="modal" data-target="#modalCriarTarefa" data-backdrop="static" id="btnNovaAtividade" ng-click="iniciaFormCriarAtividade()">Nova Tarefa <span class="fa fa-plus"></span></button></div>
+						<div class="col-lg-6"><button type="button" id="bntLimpaTarefas" class="btn btn-danger btn-block btn-md" ng-click="removerTodasAsTarefas()">Limpar Tarefas <span class="fa fa-trash-o"></span></button></div>
+					</div>
+				</div>
+				<div class="opcoes-linha-2 container">
+					<div class="row">
+						<div class="col-lg-6"><button type="button" class="btn btn-warning btn-block btn-md" ng-click="mudarFiltro()">Filtrar Tarefas <span class="{{efiltro ? 'fa fa-minus-square':'fa fa-plus-square'}}"></span></button></div>
+						<div class="form-group">
+  							<label class="control-label col-lg-1" for="ordenacaoTarefas" >Ordenar Por:</label>
+  							<div class="col-lg-5">
+  								<select class="form-control" id="ordenacaoTarefas" ng-model="tipoDeOrdenacao">
+    								<option value="">Sem Ordenacao</option>
+    								<option value="prioridade">Prioridade</option>
+    								<option value="nome">Nome</option>
+    						 	</select>
+    						 </div>	
+						</div>
+					</div>
+				</div>
+				
+				<!-- Filtro -->
+				<div ng-show="efiltro" class="filtro container">
+					<div class="row">
+						<div class="col-lg-2"><span class="center-block"><i class="icone-do-filtro fa fa-stack-overflow"></i></span></div>
+						<div class="form-group">
+							<label class="control-label col-lg-1" for="filtroTarefas">Filtrar Por:</label>
+   							<div class="col-lg-5">
+	   							<select class="form-control" id="filtroTarefas" ng-model="filtroTarefas">
+	    							<option value="">Sem Filtro</option>
+	    							<option value="prioridade">Prioridade</option>
+	    							<option value="categoria">Categoria</option>
+	    						</select>
+  							</div>
+						</div>
+					</div>	
+					<div ng-show="filtroTarefas === 'prioridade'" class="row">
+						<div class="col-lg-2"><span class="center-block"><i class="icone-do-filtro fa fa-sticky-note-o"></i></span></div>
+						<div class="form-group" >
+							<label class="control-label col-lg-2" for="filtroTarefasPrioridade">Filtrar Por Prioridade:</label>
+							<div class="col-lg-6">
+								<select class="form-control" id="filtroTarefasPrioridade" ng-model="filtroTarefasPrioridade">
+	    								<option value="">Sem Prioridade</option>
+	    								<option value="Alta">Alta</option>
+	    								<option value="Media">Media</option>
+	    								<option value="Baixa">Baixa</option>
+	    						</select>
+	    					</div>	
+	    				</div>
+	    			</div>
+	    			<div ng-show="filtroTarefas === 'categoria'" class="row">
+						<div class="col-lg-2"><span class="center-block"><i class="icone-do-filtro fa fa-sticky-note-o"></i></span></div>
+						<div class="form-group" >
+							<label class="control-label col-lg-2" for="filtroTarefasCategoria">Filtrar Por Categoria:</label>
+							<div class="col-lg-6">
+								<input name="filtroTarefasCategoria" ng-model="filtroTarefasCategoria" id="filtroTarefasCategoria" type="text" class="form-control" autocomplete="off">
+	    					</div>	
+	    				</div>
+	    			</div>
+	    			<div ng-show="filtroTarefas === 'categoria' || filtroTarefas === 'prioridade'" class="row">
+	    				<div class="col-lg-1"><span class="center-block"><i class="icone-do-filtro fa fa-paste"></i></span></div>
+	    				<div class="col-lg-5"><b>Numero De Tarefas No Filtro: <i>{{numeroDeTarefasNoFiltro()}}</i></b></div>
+	    				<div class="col-lg-6"><b>Numero De Tarefas Concluidas No Filtro: <i>{{numeroDeTarefasConcluidasNoFiltro()}}</i></b></div>
+	    			</div>
+				</div>
+				
+				<!-- Modal Criar Nova Atividade -->
+				<div id="modalCriarTarefa" class="modal fade" role="dialog">
+			  		<div class="modal-dialog">
+			
+				    <div class="modal-content">
+				      <form name="formNovaTarefa" class="form-horizontal" novalidate ng-submit="addTarefa()">
+				    	<div class="modal-header">
+				        	<button type="button" class="close" data-dismiss="modal">&times;</button>
+				       		<h4 class="modal-title">Criar Nova Atividade</h4>
+				      	</div>
+				       	<div class="modal-body">
+				       		<div class="form-group">
+								<label class="label-nova-tarefa control-label col-lg-1" for="novaTarefa">Nome: </label>	
+								<div class="content-nova-tarefa col-lg-11">
+									<input name="novaTarefa" ng-model="novaTarefa" id="novaTarefa" type="text" class="form-control" placeholder="Adicione um nome" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Nome nao pode ser vazio e nem maior que {{numeroMaximoDeCaracteresEntrada}} caracteres" required>
+								</div>
+								<label class="label-opcao-prioridade control-label col-lg-2" for="opcaoPrioridade">Prioridade: </label>
+								<div class="content-opcao-prioridade col-lg-3">
+									 <select class="opcao-prioridade form-control" ng-model="novaPrioridade" ng-options="x for x in optionsPrioridade"></select>
+								</div>
+								
+								<label class="label-nova-categoria control-label col-lg-2" for="novaCategoria">Categoria: </label>	
+								<div class="content-nova-categoria col-lg-5">
+									<input name="novaCategoria" ng-model="novaCategoria" id="novaCategoria" type="text" class=" nova-categoria form-control" placeholder="Adicione uma Categoria" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Categoria nao Pode ser maior que {{numeroMaximoDeCaracteresEntrada}} caracteres">
+								</div>
+								<label class="label-comentarios control-label col-lg-2 for="comentarios">Comentarios: </label>
+  								<div class="content-comentarios col-lg-10">
+  									<textarea class="comentarios form-control" rows="3" ng-model="novoComentario" title="Comentarios nao Podem ser maiores que {{numeroMaximoDeCaracteresTexto}} caracteres"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+				      		<button ng-disabled="novoComentario.length >= numeroMaximoDeCaracteresTexto || !formNovaTarefa.novaTarefa.$valid || !formNovaTarefa.novaCategoria.$valid" type="submit" class="btn btn-success btn-default"><span class="glyphicon glyphicon-ok"></span> Criar</button>
+				      	</div>
+					  </form>
+				  	</div>
+				  </div>
+				</div>
+				
+				<!-- Barra De Progresso -->
+				<div class="container">
+					<h3 id="textoBarraDeTarefas">O Progresso Atual {{efiltro ? 'Do Filtro':'Da Lista'}} é:</h3>
+					<div class="progress">
+						<div id="barraDeProgresso" class="{{barraProgresso()}}" role="progressbar"
+						aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{{progresso()}}%">
+						{{progresso()}}%
+						</div>
+					</div>
+				</div>
+				
+				<!-- Lista De Tarefas -->
+				<ul class="list-group" id="listaTarefas" >
+					<li dir-paginate="tarefa in tarefas | meuFiltro: filtroTarefas : filtroAtual() | minhaOrdenacao: tipoDeOrdenacao | itemsPerPage:5" class="{{tarefa.estaConcluida ? 'lista-tarefa-item list-group-item active':'lista-tarefa-item list-group-item'}}">
+						<div class="linha-tarefa-1 row">
+							<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="{{tarefa.estaConcluida ? 'icone-check fa fa-check-square-o':'icone-check fa fa-square-o'}}" ng-click="tarefaEstaConcluida(tarefa)" title="Clique Para Marcar ou Desmarcar Tarefa"></i></div>
+   							<div class="tarefa-nome col-lg-10 col-md-10 col-sm-10 col-xs-8" title="Nome Da Tarefa">{{tarefa.nome}}</div>
+    						<div class="col-lg-1 col-md-1 col-sm-1 col-xs-2"><span class="close" ng-click="removerTarefaDaLista(tarefa)" title="Remover Tarefa"><i class="glyphicon glyphicon-remove-sign"></i></span></div>
+    					</div>
+    					<div class="linha-tarefa-2 row">
+    						<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><span class="{{mudaClassePrioridade(tarefa.prioridade)}}" title="Prioridade">{{tarefa.prioridade}}</span></div>
+    						<div class="col-lg-9 col-md-9 col-sm-8 col-xs-6"><b><i>Categoria: </i></b><i class="tarefa-categoria">{{tarefa.categoria}}</i></div>
+    						<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="icone-configuracao fa fa-cog" data-toggle="modal" data-target="#modalEditarTarefa" data-backdrop="static" ng-click="iniciaFormEditarAtividade(tarefa)" title="Editar Tarefa"></i></div>
+  						</div>
+		  				<div class="linha-tarefa-3 row">
+   							 <div class="col-lg-11 col-md-11 col-sm-10 col-xs-8"><b><i>Comentarios: </i></b>{{tarefa.comentarios}}</div>
+   							 <div class="col-lg-1 col-md-1 col-sm-2 col-xs-4"><i class="{{mostrarSubtarefas ? 'icone-subtarefa fa fa-chevron-up':'icone-subtarefa fa fa-chevron-down'}}" title="Mostrar SubTarefas" ng-click="mostrarSubtarefas = !mostrarSubtarefas"></i></div>
+   						</div>
+   						<div ng-show="mostrarSubtarefas">
+	   						<ul class="lista-subtarefas list-group"> SubTarefas:
+	    						<li ng-repeat="subtarefa in tarefa.subtarefas"  class="{{subtarefa.estaConcluida ? 'lista-subtarefa-item list-group-item active':'lista-subtarefa-item list-group-item'}}">
+	    							<div class="linha-subtarefa-1 row">
+										<div class="col-lg-1 col-md-1 col-sm-2 col-xs-1"><i class="{{subtarefa.estaConcluida ? 'icone-check fa fa-check-square-o':'icone-check fa fa-square-o'}}" ng-click="subtarefaEstaConcluida(tarefa, subtarefa)" title="Clique Para Marcar ou Desmarcar SubTarefa"></i></div>
+	   									<div class="subtarefa-nome col-lg-10 col-md-10 col-sm-8 col-xs-7" title="Nome Da SubTarefa">{{subtarefa.nome}}</div>
+	    								<div class="col-lg-1 col-md-1 col-sm-2 col-xs-1"><span class="close" ng-click="removerSubTarefaDeTarefa(tarefa, subtarefa)" title="Remover SubTarefa"><i class="glyphicon glyphicon-remove-sign"></i></span></div>
+	    							</div>
+	    						</li>
+	    					</ul>
+	    					<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#modalAdicionarSubtarefa" data-backdrop="static" ng-click="iniciaFormAddSubtarefa(tarefa)"><span class="fa fa-plus-square-o"></span> Adicionar Subtarefa</button>
+    					</div>
+    				</li>
+    				<dir-pagination-controls max-size="5" boundary-links="true"></dir-pagination-controls>	
+				</ul>
+				
+				<!-- Modal Adicionar Subtarefa -->
+				<div id="modalAdicionarSubtarefa" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						
+						<div class="modal-content">
+							<form name="formAddSubTarefa" class="form-horizontal" novalidate ng-submit="addSubtarefaEmTarefa()">
+								<div class="modal-header">
+						    		<button type="button" class="close" data-dismiss="modal">&times;</button>
+						        	<h4 class="modal-title">Adicionar Subtarefa</h4>
+						     	</div>
+						     	<div class="modal-body">
+						     		<div class="form-group">
+										<label class="label-nova-tarefa control-label col-lg-1" for="novaSubtarefa">Nome: </label>	
+										<div class="content-nova-tarefa col-lg-11">
+											<input name="novaSubtarefa" ng-model="novaSubtarefa" id="novaSubtarefa" type="text" class="form-control" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Nome nao pode ser vazio e nem maior que {{numeroMaximoDeCaracteresEntrada}} caracteres" required>
+										</div>
+									</div>
+								</div>
+						    	<div class="modal-footer">
+						    		<button ng-disabled="!formAddSubTarefa.novaSubtarefa.$valid" type="submit" class="btn btn-success btn-default"><span class="fa fa-arrow-circle-o-down"></span> Adicionar</button>
+								</div>
+						    </form>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Modal Configuracao Atividade -->
+				<div id="modalEditarTarefa" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+					
+						<div class="modal-content">
+							<form name="formEditarTarefa" class="form-horizontal" novalidate ng-submit="editarTarefaAtual()">
+								<div class="modal-header">
+						    		<button type="button" class="close" data-dismiss="modal">&times;</button>
+						        	<h4 class="modal-title">Editar Tarefa</h4>
+						    	</div>
+						    	<div class="modal-body">
+						    		<div class="form-group">
+										<label class="label-nova-tarefa control-label col-lg-1" for="editarTarefa">Nome: </label>	
+										<div class="content-nova-tarefa col-lg-11">
+											<input name="editarTarefa" ng-model="editarTarefa" id="editarTarefa" type="text" class="form-control" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Nome nao pode ser vazio e nem maior que {{numeroMaximoDeCaracteresEntrada}} caracteres"required>
+										</div>
+										<label class="label-opcao-prioridade control-label col-lg-2" for="opcaoPrioridade">Prioridade: </label>
+										<div class="content-opcao-prioridade col-lg-3">
+											<select class="opcao-prioridade form-control" ng-model="editarPrioridade" ng-options="x for x in optionsPrioridade"></select>
+										</div>
+										
+										<label class="label-nova-categoria control-label col-lg-2" for="editarCategoria">Categoria: </label>	
+										<div class="content-nova-categoria col-lg-5">
+											<input name="editarCategoria" ng-model="editarCategoria" id="editarCategoria" type="text" class=" nova-categoria form-control" autocomplete="off" pattern=".{0,{{numeroMaximoDeCaracteresEntrada}}}" title="Categoria nao Pode ser maior que {{numeroMaximoDeCaracteresEntrada}} caracteres">
+										</div>
+										<label class="label-comentarios control-label col-lg-2 for="comentarios">Comentarios: </label>
+		  								<div class="content-comentarios col-lg-10">
+		  									<textarea class="comentarios form-control" rows="3" ng-model="editarComentarios" title="Comentarios nao Podem ser maiores que {{numeroMaximoDeCaracteresTexto}} caracteres"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+						    		<button ng-disabled="editarComentarios.length >= numeroMaximoDeCaracteresTexto || !formEditarTarefa.editarTarefa.$valid || !formEditarTarefa.editarCategoria.$valid" type="submit" class="btn btn-info btn-default"><span class="fa fa-arrow-circle-o-down"></span> Editar</button>
+								</div>
+							</form>
+						</div>
+    				</div>
+    			</div>
+			</div>
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--UFCG - Ciencia Da Computacao-->
+<!--Criado por Davi Laerte-->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="author" content="Davi Laerte">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="templates/css/menuPrincipal.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>	
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+   	<script src="templates/js/util.js"></script>
+   	<script src="templates/js/app.js"></script>
+   	<script src="templates/js/filtros.js"></script>
+   	<script src="templates/js/dirPagination.js"></script>
+   	<script src="templates/js/menuController.js"></script>
+   	<script src="templates/js/listaDeTarefasController.js"></script>
+   	<script src="templates/js/verListaDeTarefasController.js"></script>
+   	<script src="templates/js/addListaDeTarefaController.js"></script>
+   	<title>Menu</title>
+
+</head>
+
+<body ng-app="menuPrincipal" ng-controller="menuControle">
+	<div class="container" id="menuPrincipal">
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Menu</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="{{verificaRota('/addListaTarefa')}}"><a href="#addListaTarefa">Adicionar Nova Lista</a></li>
+					<li class="{{verificaRota('/verListaTarefas')}}"><a href="#verListaTarefas">Listas De Tarefas</a></li>
+					<li class="{{verificaRota('/sobre')}}"><a href="#sobre">Sobre </a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					 <li><a><span class="fa fa-file-o"></span><b> Total De Tarefas: {{totalDeTarefas}}</b></a></li>
+				</ul>
+			</div>
+		</nav>
+	
+		<ng-view></ng-view>
+		
+		<footer class="footer">
+			Copyright © Davi Laerte 2016. All right reserved.
+		</footer>	
+	</div>
+</body>
+
+</html>

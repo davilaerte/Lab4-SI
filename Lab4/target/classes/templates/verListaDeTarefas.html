@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--UFCG - Ciencia Da Computacao-->
+<!--Criado por Davi Laerte-->
+
+<html lang="en">
+	<head>
+	  <title>verListaDeTarefas</title>
+	  <meta charset="utf-8">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-2 col-xs-0"></div>
+				<div class="col-lg-6 col-md-6 col-sm-8 col-xs-12"><h1 id="textoPrincipal"><i>Listas De Tarefas</i></h1></div>
+				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-0"></div>
+			</div>
+			<div ng-show="alerta.estaAtivo" class="{{alerta.classe}}">
+  				<a class="close" aria-label="close" ng-click="alerta.estaAtivo = false">&times;</a>
+  				<strong>{{alerta.tipoAlerta}}!</strong> {{alerta.texto}}
+			</div>
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-2 col-xs-0"></div>
+				<div class="col-lg-6 col-md-6 col-sm-8 col-xs-12"><button type="button" class="btn btn-danger btn-block btn-md" ng-click="removerTodasAsTarefasDasListas()"><b>Limpar Listas De Tarefas</b> <span class="fa fa-trash-o"></span></button></div>
+				<div class="col-lg-3 col-md-3 col-sm-2 col-xs-0"></div>
+			</div>
+			<ul class="list-group" id="listaDeTarefas">
+				<li dir-paginate="tarefa in listasDeTarefas | itemsPerPage:5" class="list-group-item">
+					<div class="row">
+					<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><span class="center-block"><i class="glyphicon glyphicon-tasks"></i></span></div>
+					<div class="col-lg-10 col-md-9 col-sm-8 col-xs-5"><a href="{{'#listaDeTarefa/'+tarefa.id}}"><div class="nome-da-lista" title="Clique Para Acessar Lista">{{tarefa.nome}}</div></a></div>
+					<div class="col-lg-1 col-md-2 col-sm-2 col-xs-5"><span title="Numero De Tarefas Da Lista"  class="badge">{{tarefa.tamanho}}</span><span class="close" ng-click="deletarListaDeTarefa(tarefa)" title="Remover Lista"><i class="glyphicon glyphicon-remove-sign"></i></span></div>
+					</div>
+				</li>
+				<dir-pagination-controls max-size="5" boundary-links="true"></dir-pagination-controls>
+			</ul>
+		</div>
+	</body>
+</html>
