@@ -60,6 +60,14 @@ body {
 	margin-left: 22%; 
 }
 
+.icone-download-pdf {
+	font-size:16px;
+}
+
+.icone-download-pdf:hover {
+	opacity: 0.5;
+	filter: alpha(opacity=50); /* For IE8 and earlier */
+}
 
 #menuPrincipal {
 	background-color: white;

@@ -7,6 +7,7 @@
 app.controller("verListaDeTarefasController", function($scope, $http, $location) {
 	$scope.listasDeTarefas = [];
 	$scope.alerta = {texto:"", tipoAlerta:"" , estaAtivo:false, classe:""};
+	$scope.listaDeTarefaDownloadPDF;
 	
 	//carrega listas de tarefas
 	$scope.carregarListasDeTarefas = function () {
@@ -46,6 +47,38 @@ app.controller("verListaDeTarefasController", function($scope, $http, $location)
 		}).error(function (data, status){
 			$scope.mudarAlerta("Erro Ao Tentar remover Listas De Tarefas, Erro Do Servidor.", "Status: "+status, true, "alert alert-danger");
 		})
+	}
+	
+	$scope.iniciaDownloadListaDeTarefa = function(listaDeTarefa) {
+		$scope.listaDeTarefaDownloadPDF = listaDeTarefa;
+	}
+	
+	$scope.baixarPDFListaDeTarefa = function() {
+		
+		//Jquery, necessario para fechar modal.
+		$("#modalDownloadPDF").modal("hide");
+		
+		var idLista = $scope.listaDeTarefaDownloadPDF.id;
+						
+		$http.get($scope.$parent.protocolo + location.host + "/ListaDeTarefa/"+ idLista).success(function (data, status){
+			
+			var textoPDF = criarTextoPDF(data);
+			var docDefinition = textoPDF;
+			
+			pdfMake.createPdf(docDefinition).download(data.nome+'.pdf');
+			
+		}).error(function (data, status){
+			
+			//verifica status e modifica alerta de acordo com status.
+			if(status == 404) {
+				$scope.mudarAlerta("Erro Ao Tentar Baixar PDF, Lista Nao Encontrada", "Status: "+status, true, "alert alert-danger");
+			
+			} else {
+				$scope.mudarAlerta("Erro Ao Tentar Baixar PDF, Erro Do Servidor.", "Status: "+status, true, "alert alert-danger");
+			}
+			
+		})
+		
 	}
 	
 	$scope.mudarAlerta = function(texto,tipoAlerta, estaAtivo, classe) {
